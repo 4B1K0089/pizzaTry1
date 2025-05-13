@@ -1,36 +1,36 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class MultiplayerManager : MonoBehaviour
 {
     public static MultiplayerManager Instance;
 
-    [Header("Player Prefabs")]
-    public Transform playerParent;
 
     [Header("Countdown UI")]
     public GameObject countdownPanel;
-    public TMPro.TextMeshProUGUI countdownText;
+    public TextMeshProUGUI countdownText;
+
+    [Header("Shared Character Data")]
+    public Sprite[] sharedCharacterSprites;
+
+    [Header("Display Positions")]
+    public Transform[] playerDisplayPositions;
 
     public List<PlayerSelector> activePlayers = new List<PlayerSelector>();
     private HashSet<int> lockedCharacters = new HashSet<int>();
-    private int confirmedCount = 0;
     private int maxPlayers = 4;
     private bool countdownStarted = false;
 
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 
     private void Start()
@@ -41,7 +41,7 @@ public class MultiplayerManager : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
-        int index = activePlayers.Count;
+        int index = activePlayers.Count-0;
 
         if (index >= maxPlayers)
         {
@@ -49,9 +49,15 @@ public class MultiplayerManager : MonoBehaviour
             return;
         }
 
+        if (index < playerDisplayPositions.Length)
+        {
+            playerInput.transform.position = playerDisplayPositions[index].position;
+        }
+
         playerInput.transform.SetParent(this.transform);
-        PlayerSelector selectorScript = playerInput.GetComponent<PlayerSelector>();
-        RegisterPlayer(selectorScript);
+        PlayerSelector selector = playerInput.GetComponent<PlayerSelector>();
+        selector.Initialize(index, sharedCharacterSprites, playerDisplayPositions[index]);
+        RegisterPlayer(selector);
     }
 
     public void RegisterPlayer(PlayerSelector player)
@@ -59,13 +65,19 @@ public class MultiplayerManager : MonoBehaviour
         if (!activePlayers.Contains(player) && activePlayers.Count < maxPlayers)
         {
             activePlayers.Add(player);
-
-            if (activePlayers.Count == maxPlayers && !countdownStarted)
-            {
-                countdownStarted = true;
-                ShowCountdownPanel();
-            }
         }
+        Debug.Log($"目前玩家總數: {activePlayers.Count}");
+    }
+
+    public void ConfirmPlayerSelection(int playerIndex, int characterIndex)
+    {
+        if (lockedCharacters.Contains(characterIndex)) return;
+        lockedCharacters.Add(characterIndex);
+    }
+
+    public bool IsCharacterTaken(int characterIndex)
+    {
+        return lockedCharacters.Contains(characterIndex);
     }
 
     public void UpdateReady()
@@ -76,7 +88,11 @@ public class MultiplayerManager : MonoBehaviour
                 return;
         }
 
-        ShowCountdownPanel();
+        if (!countdownStarted)
+        {
+            countdownStarted = true;
+            ShowCountdownPanel();
+        }
     }
 
     private void ShowCountdownPanel()
@@ -98,18 +114,5 @@ public class MultiplayerManager : MonoBehaviour
         countdownText.text = "GO!";
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("GameScene");
-    }
-
-    public void ConfirmPlayerSelection(int playerIndex, int characterIndex)
-    {
-        if (lockedCharacters.Contains(characterIndex)) return;
-
-        lockedCharacters.Add(characterIndex);
-        confirmedCount++;
-    }
-
-    public bool IsCharacterTaken(int characterIndex)
-    {
-        return lockedCharacters.Contains(characterIndex);
     }
 }

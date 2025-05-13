@@ -5,83 +5,82 @@ using System.Collections;
 public class PlayerSelector : MonoBehaviour
 {
     public int playerIndex;
-    public Sprite[] characterSprites;
-    public Transform[] positions; // 存放各圖片的位置
+    private Sprite[] characterSprites;
 
     private int currentIndex = 0;
-    private bool inputLocked = false;
     public bool isReady = false;
-    private GameObject currentImageObject;
-
     private PlayerInput playerInput;
+    private bool inputLocked = false;
 
-    private void Awake()
+    private Transform displayImageObject;
+    //private Transform playerDisplayPositions[index];
+
+    void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-
-        var actionMap = playerInput.currentActionMap;
-        actionMap.FindAction("Move").performed += OnMove;
-        actionMap.FindAction("Confirm").performed += OnConfirm;
+        playerInput.currentActionMap.FindAction("Move").performed += OnMove;
+        playerInput.currentActionMap.FindAction("Confirm").performed += OnConfirm;
     }
 
-    private void OnMove(InputAction.CallbackContext context)
+
+    // 外部呼叫初始化
+    public void Initialize(int index, Sprite[] sprites, Transform imageObject)
     {
-        //if (inputLocked || isReady) return;
-
-        //Vector2 move = context.ReadValue<Vector2>();
-        //if (move.x > 0.5f)
-        //{
-        //    OnRightMove();
-        //}
-        //else if (move.x < -0.5f)
-        //{
-        //    OnLeftMove();
-        //}
+        playerIndex = index;
+        characterSprites = sprites;
+        displayImageObject = imageObject;
+        //displayImageObject.SetParent(playerDisplayPositions[index].Transform);
+        UpdateImageDisplay();
     }
 
-    private void OnLeftMove()
+    void OnMove(InputAction.CallbackContext context)
     {
-        currentIndex = (currentIndex - 1 + characterSprites.Length) % characterSprites.Length;
-        UpdateImage();
-        StartCoroutine(UnlockInputDelay());
+        if (inputLocked || !isReady) return;
+
+        Vector2 move = context.ReadValue<Vector2>();
+
+        if (move.x > 0.5f)
+        {
+            currentIndex = (currentIndex + 1) % characterSprites.Length;
+            UpdateImageDisplay();
+            StartCoroutine(UnlockInputDelay());
+        }
+        else if (move.x < -0.5f)
+        {
+            currentIndex = (currentIndex - 1 + characterSprites.Length) % characterSprites.Length;
+            UpdateImageDisplay();
+            StartCoroutine(UnlockInputDelay());
+        }
     }
 
-    private void OnRightMove()
+    void OnConfirm(InputAction.CallbackContext context)
     {
-        currentIndex = (currentIndex + 1) % characterSprites.Length;
-        UpdateImage();
-        StartCoroutine(UnlockInputDelay());
+        if (!isReady)
+        {
+            isReady = true;
+            MultiplayerManager.Instance.ConfirmPlayerSelection(playerIndex, currentIndex);
+            MultiplayerManager.Instance.UpdateReady();
+            Debug.Log($"Player {playerIndex} confirmed image {currentIndex}");
+        }
     }
 
-    private void OnConfirm(InputAction.CallbackContext context)
+    // 更新圖片顯示
+    public void UpdateImageDisplay()
     {
-        //if (!isReady)
-        //{
-        //    isReady = true;
-        //    MultiplayerManager.Instance.ConfirmPlayerSelection(playerIndex, currentIndex);
-        //    MultiplayerManager.Instance.UpdateReady();
-        //}
+        if (displayImageObject != null && characterSprites != null)
+        {
+            SpriteRenderer renderer = displayImageObject.GetComponent<SpriteRenderer>();
+            if (renderer != null)
+            {
+                renderer.sprite = characterSprites[currentIndex];
+            }
+        }
     }
 
-    private void UpdateImage()
-    {
-        //if (currentImageObject != null)
-        //{
-        //    Destroy(currentImageObject);
-        //}
-
-        //GameObject newImageObj = new GameObject("PlayerImage_" + playerIndex);
-        //var image = newImageObj.AddComponent<UnityEngine.UI.Image>();
-        //image.sprite = characterSprites[currentIndex];
-
-        //newImageObj.transform.SetParent(positions[playerIndex], false);
-        //currentImageObject = newImageObj;
-    }
-
-    private IEnumerator UnlockInputDelay()
+    IEnumerator UnlockInputDelay()
     {
         inputLocked = true;
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
         inputLocked = false;
     }
 }

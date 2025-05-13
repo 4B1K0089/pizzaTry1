@@ -1,96 +1,63 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerJoinManager : MonoBehaviour
 {
-    public GameObject[] presetPlayers; // 預設的披薩物件（Hierarchy 中先放好）
-    public Transform[] spawnPoints2P;
-    public Transform[] spawnPoints4P;
+    public GameObject[] pizzaModels; // 只含有模型，不含 PlayerInput
+    public Transform[] spawnPoints;
 
-    private HashSet<int> joinedDevices = new HashSet<int>();
+    private List<int> availableModelIndices = new List<int>();
     private int playerCount = 0;
 
-    [SerializeField] private int maxPlayers = 4;
+    private void Start()
+    {
+        // 初始化可用模型索引為 0 ~ pizzaModels.Length-1
+        for (int i = 0; i < pizzaModels.Length; i++)
+        {
+            availableModelIndices.Add(i);
+        }
+    }
 
     private void OnEnable()
     {
         if (PlayerInputManager.instance != null)
-        {
             PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
-        }
     }
 
     private void OnDisable()
     {
         if (PlayerInputManager.instance != null)
-        {
             PlayerInputManager.instance.onPlayerJoined -= OnPlayerJoined;
-        }
     }
 
     private void OnPlayerJoined(PlayerInput playerInput)
     {
-        // 若裝置未綁定則拒絕
-        if (playerInput.devices.Count == 0)
+        Debug.Log($"加入的玩家裝置: {playerInput.devices[0].displayName}");
+        if (availableModelIndices.Count == 0 || playerCount >= spawnPoints.Length)
         {
-            Debug.LogWarning("這個玩家沒有綁定任何輸入裝置！");
+            Debug.LogWarning("已無可用模型或出生點！");
             Destroy(playerInput.gameObject);
             return;
         }
 
-        int deviceId = playerInput.devices[0].deviceId;
+        // 從剩餘的 index 中隨機選一個
+        int randomIndex = Random.Range(0, availableModelIndices.Count);
+        int selectedModelIndex = availableModelIndices[randomIndex];
 
-        // 控制器是否已加入
-        if (joinedDevices.Contains(deviceId))
-        {
-            Debug.LogWarning("這個控制器已經加入過了！");
-            Destroy(playerInput.gameObject);
-            return;
-        }
+        // 從列表中移除這個 index，避免重複使用
+        availableModelIndices.RemoveAt(randomIndex);
 
-        if (playerCount >= maxPlayers)
-        {
-            Debug.LogWarning("超出最大玩家數，拒絕加入！");
-            Destroy(playerInput.gameObject);
-            return;
-        }
+        // 移動玩家到出生點
+        playerInput.transform.position = spawnPoints[playerCount].position;
+        playerInput.transform.rotation = spawnPoints[playerCount].rotation;
 
-        // 出生點選擇邏輯
-        Transform[] spawnArray = (maxPlayers <= 2) ? spawnPoints2P : spawnPoints4P;
+        // 實例化模型，設為 player 的子物件
+        GameObject model = Instantiate(pizzaModels[selectedModelIndex], playerInput.transform);
+        model.transform.localPosition = Vector3.zero;
+        model.SetActive(true); // 加這行來保證模型有顯示
 
-        if (playerCount >= spawnArray.Length)
-        {
-            Debug.LogError("Spawn point 數量不足！");
-            Destroy(playerInput.gameObject);
-            return;
-        }
 
-        if (presetPlayers == null || presetPlayers.Length == 0 || presetPlayers[playerCount] == null)
-        {
-            Debug.LogError("預設披薩物件（presetPlayers）尚未設定！");
-            Destroy(playerInput.gameObject);
-            return;
-        }
-
-        // 創建小披薩玩家物件
-        GameObject newPlayer = Instantiate(presetPlayers[playerCount], spawnArray[playerCount].position, spawnArray[playerCount].rotation);
-        newPlayer.transform.SetParent(playerInput.transform, false); // 將 PlayerInput 作為新小披薩的父物件
-
-        // 確保不重複添加 PlayerInput
-        PlayerInput newPlayerInput = newPlayer.GetComponent<PlayerInput>();
-        if (newPlayerInput == null)
-        {
-            newPlayerInput = newPlayer.AddComponent<PlayerInput>();
-        }
-
-       // newPlayerInput.defaultControlScheme = "Gamepad";
-        newPlayerInput.actions = playerInput.actions; // 繼承原有的輸入配置
-
-        // 更新玩家狀態
-        joinedDevices.Add(deviceId);
         playerCount++;
-
-        Debug.Log($"玩家 {playerInput.playerIndex + 1} 加入，位置：{spawnArray[playerCount - 1].position}");
     }
 }

@@ -21,9 +21,20 @@ public class PizzaLauncher : MonoBehaviour
     private Vector2 stickInput;
     private bool isCharging = false;
     private Vector3 launchDirection;
-
-    // 蓄力值緩存（避免 Coroutine 時 stickInput 已變）
     private float cachedCharge = 0f;
+
+    private PlayerInput playerInput;
+    private Gamepad assignedGamepad;
+
+    private void Awake()
+    {
+        playerInput = GetComponent<PlayerInput>();
+
+        if (playerInput.devices.Count > 0 && playerInput.devices[0] is Gamepad pad)
+        {
+            assignedGamepad = pad;
+        }
+    }
 
     private void Start()
     {
@@ -40,24 +51,20 @@ public class PizzaLauncher : MonoBehaviour
 
     private void Update()
     {
-        Gamepad gamepad = Gamepad.current;
-        if (gamepad == null) return;
+        if (assignedGamepad == null) return;
 
-        stickInput = gamepad.leftStick.ReadValue();
+        stickInput = assignedGamepad.leftStick.ReadValue();
 
         if (stickInput.magnitude > 0.1f)
         {
             isCharging = true;
 
-            // 取得方向並反向（像拉彈弓）
             Vector3 inputDirection = new Vector3(stickInput.x, 0, stickInput.y).normalized;
             transform.forward = -inputDirection;
             launchDirection = transform.forward;
 
-            // 緩存蓄力值（範圍 0~1）
             cachedCharge = stickInput.magnitude;
 
-            // 顯示預測線
             if (lineRenderer != null)
             {
                 lineRenderer.enabled = true;
@@ -69,7 +76,6 @@ public class PizzaLauncher : MonoBehaviour
             }
         }
 
-        // 放手發射
         if (isCharging && stickInput.magnitude <= 0.1f)
         {
             StartCoroutine(LaunchPizza());
@@ -93,17 +99,12 @@ public class PizzaLauncher : MonoBehaviour
         float launchPower = Mathf.Max(cachedCharge * maxPower, minPower);
         rb.AddForce(launchDirection * launchPower, ForceMode.Impulse);
 
-        // 🧠 根據力度調整 drag（力度越小，drag 越大）
-        float maxDrag = 5f; // 阻力上限（可調整）
-        float minDrag = 0.2f; // 阻力下限（可調整）
-
-        // 注意 cachedCharge 是 0~1 範圍
+        float maxDrag = 5f;
+        float minDrag = 0.2f;
         rb.drag = Mathf.Lerp(maxDrag, minDrag, cachedCharge);
 
         Debug.Log($"發射！方向: {launchDirection}, 力度: {launchPower}, Drag: {rb.drag}");
     }
-
-
 
     private void ClampPizzaPosition()
     {
@@ -111,9 +112,6 @@ public class PizzaLauncher : MonoBehaviour
         float z = Mathf.Clamp(transform.position.z, -boundaryLimit, boundaryLimit);
         transform.position = new Vector3(x, transform.position.y, z);
     }
-
-   
-
 
     private void OnCollisionEnter(Collision collision)
     {

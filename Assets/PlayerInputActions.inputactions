@@ -22,7 +22,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "GamepadScheme",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -91,15 +91,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "UnConfirm",
-                    "type": "Button",
-                    "id": "c3f6b133-02ad-450c-814b-cdb4b0f50a25",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Confirm",
                     "type": "Button",
                     "id": "d100f5eb-f430-4b02-b2b5-52f23358ba8c",
@@ -123,17 +114,6 @@
                 },
                 {
                     "name": "",
-                    "id": "824d7e7a-cd15-4837-8558-90c685c0f567",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UnConfirm",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "05e830bc-5d07-4846-bd14-2bd9564d8525",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
@@ -146,5 +126,17 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "GamepadScheme",
+            "bindingGroup": "GamepadScheme",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }

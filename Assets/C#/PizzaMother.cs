@@ -16,7 +16,7 @@ public class PizzaMother : MonoBehaviour
     void Update()
     {
         // 自轉
-        transform.Rotate(-Vector3.forward * rotationSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
 
         // 偵測 Cube 同步位置與旋轉
         detectionCube.position = transform.position;
