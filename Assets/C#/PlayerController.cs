@@ -3,35 +3,69 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerInputActions inputActions;
-    public int selectedPizzaIndex = -1;
-    public bool hasSelectedPizza { get; private set; } = false;
+    public Vector3 LaunchDirection { get; private set; } = Vector3.forward;
+    public float ChargeAmount { get; private set; } = 0f;
+
+    [Header("Line Renderer")]
+    public Transform lineStartTransform;
+    public LineRenderer lineRenderer;
+    public float maxLineLength = 2f;
+
+    private Vector2 moveInput;
+    private Gamepad assignedGamepad;
+    public bool IsCharging { get; private set; } = false;
 
     private void Awake()
     {
-        inputActions = new PlayerInputActions();
+        var playerInput = GetComponent<PlayerInput>();
+        if (playerInput.devices.Count > 0 && playerInput.devices[0] is Gamepad pad)
+        {
+            assignedGamepad = pad;
+        }
     }
-    //以下要記得改B鍵紀錄已選披薩
 
-    //private void OnEnable()
-    //{
-    //    inputActions.Enable();
-    //    inputActions.Character.SelectPizza.performed += OnSelectPizza;
-    //}
+    private void Start()
+    {
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 2;
+            lineRenderer.enabled = false;
+        }
+    }
 
-    //private void OnDisable()
-    //{
-    //    inputActions.Character.SelectPizza.performed -= OnSelectPizza;
-    //    inputActions.Disable();
-    //}
+    private void Update()
+    {
+        if (assignedGamepad == null) return;
 
-    //private void OnSelectPizza(InputAction.CallbackContext context)
-    //{
-    //    if (!hasSelectedPizza)
-    //    {
-    //        selectedPizzaIndex = (selectedPizzaIndex + 1) % 4;
-    //        hasSelectedPizza = true;
-    //        Debug.Log("玩家選擇了披薩：" + selectedPizzaIndex);
-    //    }
-    //}
+        moveInput = assignedGamepad.leftStick.ReadValue();
+
+        if (moveInput.magnitude > 0.1f)
+        {
+            IsCharging = true;
+
+            Vector3 inputDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+            LaunchDirection = -inputDir; // 指向反方向（如彈射）
+
+            ChargeAmount = Mathf.Clamp01(moveInput.magnitude); // 限制 0~1
+
+            transform.forward = LaunchDirection;
+
+            if (lineRenderer != null)
+            {
+                lineRenderer.enabled = true;
+                float lineLength = Mathf.Lerp(0, maxLineLength, ChargeAmount);
+                Vector3 start = lineStartTransform.position;
+                Vector3 end = start + (-transform.forward) * lineLength;
+                lineRenderer.SetPosition(0, start);
+                lineRenderer.SetPosition(1, end);
+            }
+        }
+        else
+        {
+            if (lineRenderer != null)
+                lineRenderer.enabled = false;
+
+            IsCharging = false;
+        }
+    }
 }

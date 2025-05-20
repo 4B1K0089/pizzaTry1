@@ -4,91 +4,52 @@ using System.Collections;
 
 public class PizzaLauncher : MonoBehaviour
 {
-    [Header("Power Settings")]
     public float maxPower = 20f;
     public float minPower = 5f;
-
-    [Header("Bounce & Boundary")]
     public float bounceForce = 1.5f;
     public float boundaryLimit = 4f;
 
-    [Header("Aiming Visuals")]
-    public float maxLineLength = 2f;
-    public Transform lineStartTransform;
-    public LineRenderer lineRenderer;
-
     private Rigidbody rb;
-    private Vector2 stickInput;
-    private bool isCharging = false;
-    private Vector3 launchDirection;
-    private float cachedCharge = 0f;
-
     private PlayerInput playerInput;
-    private Gamepad assignedGamepad;
+    private InputAction fireAction;
+    private PlayerController controller;
 
     private void Awake()
-    {
-        playerInput = GetComponent<PlayerInput>();
-
-        if (playerInput.devices.Count > 0 && playerInput.devices[0] is Gamepad pad)
-        {
-            assignedGamepad = pad;
-        }
-    }
-
-    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.freezeRotation = true;
 
-        if (lineRenderer != null)
-        {
-            lineRenderer.positionCount = 2;
-            lineRenderer.enabled = false;
-        }
+        playerInput = GetComponent<PlayerInput>();
+        controller = GetComponent<PlayerController>();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (assignedGamepad == null) return;
-
-        stickInput = assignedGamepad.leftStick.ReadValue();
-
-        if (stickInput.magnitude > 0.1f)
+        if (playerInput != null)
         {
-            isCharging = true;
-
-            Vector3 inputDirection = new Vector3(stickInput.x, 0, stickInput.y).normalized;
-            transform.forward = -inputDirection;
-            launchDirection = transform.forward;
-
-            cachedCharge = stickInput.magnitude;
-
-            if (lineRenderer != null)
-            {
-                lineRenderer.enabled = true;
-                float lineLength = Mathf.Lerp(0, maxLineLength, cachedCharge);
-                Vector3 arrowStart = lineStartTransform.position;
-                Vector3 arrowEnd = arrowStart + (-transform.forward) * lineLength;
-                lineRenderer.SetPosition(0, arrowStart);
-                lineRenderer.SetPosition(1, arrowEnd);
-            }
+            fireAction = playerInput.actions["Select"]; // A鍵
+            fireAction.performed += OnFirePerformed;
         }
-
-        if (isCharging && stickInput.magnitude <= 0.1f)
-        {
-            StartCoroutine(LaunchPizza());
-            isCharging = false;
-
-            if (lineRenderer != null)
-                lineRenderer.enabled = false;
-        }
-
-        ClampPizzaPosition();
     }
 
-    private IEnumerator LaunchPizza()
+    private void OnDisable()
+    {
+        if (fireAction != null)
+        {
+            fireAction.performed -= OnFirePerformed;
+        }
+    }
+
+    private void OnFirePerformed(InputAction.CallbackContext context)
+    {
+        if (controller != null && controller.IsCharging)
+        {
+            StartCoroutine(Launch(controller.LaunchDirection, controller.ChargeAmount));
+        }
+    }
+
+    private IEnumerator Launch(Vector3 direction, float charge)
     {
         yield return null;
 
@@ -96,14 +57,19 @@ public class PizzaLauncher : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        float launchPower = Mathf.Max(cachedCharge * maxPower, minPower);
-        rb.AddForce(launchDirection * launchPower, ForceMode.Impulse);
+        float power = Mathf.Max(charge * maxPower, minPower);
+        rb.AddForce(direction * power, ForceMode.Impulse);
 
         float maxDrag = 5f;
         float minDrag = 0.2f;
-        rb.drag = Mathf.Lerp(maxDrag, minDrag, cachedCharge);
+        rb.drag = Mathf.Lerp(maxDrag, minDrag, charge);
 
-        Debug.Log($"發射！方向: {launchDirection}, 力度: {launchPower}, Drag: {rb.drag}");
+        Debug.Log($"發射！方向: {direction}, 力度: {power}, Drag: {rb.drag}");
+    }
+
+    private void Update()
+    {
+        ClampPizzaPosition();
     }
 
     private void ClampPizzaPosition()
