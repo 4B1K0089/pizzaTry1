@@ -82,12 +82,12 @@ public class PizzaLauncher : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Vector3 normal = collision.contacts[0].normal;
-            rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
-            Debug.Log("撞牆！");
-        }
+        //if (collision.gameObject.CompareTag("Wall"))
+        //{
+        //    Vector3 normal = collision.contacts[0].normal;
+        //    rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
+        //    Debug.Log("撞牆！");
+        //}
 
     }
 }

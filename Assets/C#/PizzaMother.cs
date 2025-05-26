@@ -76,12 +76,12 @@ public class PizzaMother : MonoBehaviour
             moveTimer = 0f;
         }
 
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Vector3 normal = collision.contacts[0].normal;
-            moveDirection = Vector3.Reflect(moveDirection.normalized, normal) * bounceForce;
-            Debug.Log("撞牆反彈！");
-        }
+        //if (collision.gameObject.CompareTag("Wall"))
+        //{
+        //    Vector3 normal = collision.contacts[0].normal;
+        //    moveDirection = Vector3.Reflect(moveDirection.normalized, normal) * bounceForce;
+        //    Debug.Log("撞牆反彈！");
+        //}
     }
 
 }
