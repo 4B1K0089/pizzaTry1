@@ -14,10 +14,11 @@ public class PizzaLauncher : MonoBehaviour
     private InputAction fireAction;
     private PlayerController controller;
 
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
+        rb.isKinematic = false;
         rb.freezeRotation = true;
 
         playerInput = GetComponent<PlayerInput>();
@@ -51,7 +52,6 @@ public class PizzaLauncher : MonoBehaviour
 
     private IEnumerator Launch(Vector3 direction, float charge)
     {
-        yield return null;
 
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;
@@ -65,6 +65,7 @@ public class PizzaLauncher : MonoBehaviour
         rb.drag = Mathf.Lerp(maxDrag, minDrag, charge);
 
         Debug.Log($"發射！方向: {direction}, 力度: {power}, Drag: {rb.drag}");
+        yield return null;
     }
 
     private void Update()
@@ -85,6 +86,8 @@ public class PizzaLauncher : MonoBehaviour
         {
             Vector3 normal = collision.contacts[0].normal;
             rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
+            Debug.Log("撞牆！");
         }
+
     }
 }

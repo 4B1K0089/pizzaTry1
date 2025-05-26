@@ -13,6 +13,13 @@ public class PizzaMother : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private float moveTimer = 0f;
 
+    void Start()
+    {
+        canMove = false;
+        //moveDirection = Vector3.forward * 1f; // 強制移動方向，測試用
+    }
+
+
     void Update()
     {
         // 自轉
@@ -25,36 +32,44 @@ public class PizzaMother : MonoBehaviour
         // 平滑移動邏輯（模擬 impact 力）
         if (!canMove)
         {
+            //Debug.Log("進入 move 處理區");
+
             moveTimer += Time.deltaTime;
             float t = moveTimer / moveDuration;
+            //Debug.Log("moveTimer: " + moveTimer + ", t: " + t);
 
             Vector3 targetPos = transform.position + moveDirection * Time.deltaTime;
             if (!Physics.Raycast(transform.position, moveDirection, 0.5f))
             {
+                //Debug.Log("未偵測到前方有物體，移動中...");
                 transform.position = targetPos;
             }
             else
             {
-                // 撞牆，反彈方向
-                moveDirection = Vector3.Reflect(moveDirection, Vector3.right); // 或依實際法線調整
+                //Debug.Log("偵測到牆壁，執行反彈");
+                moveDirection = Vector3.Reflect(moveDirection, Vector3.right); // 建議這邊你可以改成使用撞擊法線
             }
 
             if (moveTimer >= moveDuration)
             {
+                //Debug.Log("移動時間結束，恢復可移動狀態");
                 canMove = true;
                 moveTimer = 0f;
                 moveDirection = Vector3.zero;
             }
         }
-    }
 
+    }
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("碰撞觸發：" + collision.gameObject.name + "，Tag: " + collision.gameObject.tag);
+
         if (collision.gameObject.CompareTag("Pizza") && canMove)
         {
             Vector3 impactDir = transform.position - collision.contacts[0].point;
             impactDir.y = 0;
             impactDir.Normalize();
+            Debug.Log("撞到 Pizza！");
 
             moveDirection = impactDir * impactForce;
             canMove = false;
@@ -65,6 +80,8 @@ public class PizzaMother : MonoBehaviour
         {
             Vector3 normal = collision.contacts[0].normal;
             moveDirection = Vector3.Reflect(moveDirection.normalized, normal) * bounceForce;
+            Debug.Log("撞牆反彈！");
         }
     }
+
 }
