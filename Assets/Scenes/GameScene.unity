@@ -2571,7 +2571,7 @@ GameObject:
   - component: {fileID: 1759369694}
   - component: {fileID: 1759369693}
   - component: {fileID: 1759369692}
-  - component: {fileID: 1759369691}
+  - component: {fileID: 1759369695}
   - component: {fileID: 1759369690}
   - component: {fileID: 1759369689}
   - component: {fileID: 1759369688}
@@ -2594,7 +2594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af70ce0567f5a842b2e7f5519457d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPower: 20
+  maxPower: 180
   minPower: 5
   bounceForce: 1.5
   boundaryLimit: 4
@@ -2640,28 +2640,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 36
   m_CollisionDetection: 1
---- !u!64 &1759369691
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1759369687}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 760207555604313364, guid: 4f4bbfaafa703ae4f92ee92ec51b4984, type: 3}
 --- !u!120 &1759369692
 LineRenderer:
   serializedVersion: 2
@@ -2857,6 +2835,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &1759369695
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759369687}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 760207555604313364, guid: 4f4bbfaafa703ae4f92ee92ec51b4984, type: 3}
 --- !u!1 &1809242525
 GameObject:
   m_ObjectHideFlags: 0

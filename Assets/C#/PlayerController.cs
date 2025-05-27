@@ -68,4 +68,13 @@ public class PlayerController : MonoBehaviour
             IsCharging = false;
         }
     }
+    public float GetLineLength()
+    {
+        if (lineRenderer != null && lineRenderer.positionCount >= 2)
+        {
+            return Vector3.Distance(lineRenderer.GetPosition(0), lineRenderer.GetPosition(1));
+        }
+        return 0f;
+    }
+
 }

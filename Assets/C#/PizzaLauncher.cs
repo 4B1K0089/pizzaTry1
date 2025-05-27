@@ -46,7 +46,9 @@ public class PizzaLauncher : MonoBehaviour
     {
         if (controller != null && controller.IsCharging)
         {
-            StartCoroutine(Launch(controller.LaunchDirection, controller.ChargeAmount));
+            float lineLength = controller.GetLineLength();
+            float normalizedCharge = Mathf.InverseLerp(0.1f, 2.5f, lineLength); // 可根據實際距離微調
+            StartCoroutine(Launch(controller.LaunchDirection, normalizedCharge));
         }
     }
 
@@ -57,12 +59,13 @@ public class PizzaLauncher : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        float power = Mathf.Max(charge * maxPower, minPower);
+        // 新的力道與Drag設定
+        float power = Mathf.Lerp(minPower, maxPower, charge); // 根據LineRenderer長度變化
         rb.AddForce(direction * power, ForceMode.Impulse);
 
         float maxDrag = 5f;
         float minDrag = 0.2f;
-        rb.drag = Mathf.Lerp(maxDrag, minDrag, charge);
+        rb.drag = Mathf.Lerp(maxDrag, minDrag, charge); // 長度越長，drag越小
 
         Debug.Log($"發射！方向: {direction}, 力度: {power}, Drag: {rb.drag}");
         yield return null;
@@ -82,12 +85,22 @@ public class PizzaLauncher : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //if (collision.gameObject.CompareTag("Wall"))
-        //{
-        //    Vector3 normal = collision.contacts[0].normal;
-        //    rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
-        //    Debug.Log("撞牆！");
-        //}
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Vector3 normal = collision.contacts[0].normal;
+            rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
+            Debug.Log("撞牆！");
+        }
+
+    }
+    private void OnCollisionStay (Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Vector3 normal = collision.contacts[0].normal;
+            rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
+            Debug.Log("撞牆！");
+        }
 
     }
 }
