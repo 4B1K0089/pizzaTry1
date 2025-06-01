@@ -76,5 +76,9 @@ public class PlayerController : MonoBehaviour
         }
         return 0f;
     }
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        moveInput = context.ReadValue<Vector2>();
+    }
 
 }
