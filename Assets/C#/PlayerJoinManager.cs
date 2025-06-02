@@ -57,7 +57,13 @@ public class PlayerJoinManager : MonoBehaviour
         model.transform.localPosition = Vector3.zero;
         model.SetActive(true); // 加這行來保證模型有顯示
 
-
+        // 指定 playerId（1P, 2P...）
+        PlayerController controller = playerInput.GetComponent<PlayerController>();
+        if (controller != null)
+        {
+            controller.playerId = playerCount + 1; // 第 0 位是 P1（+1）
+            Debug.Log($"設定玩家編號為 P{controller.playerId}");
+        }
         playerCount++;
     }
 }

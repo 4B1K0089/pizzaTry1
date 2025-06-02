@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public int playerId; // 設定為 1, 2, 3, 4...
     public Vector3 LaunchDirection { get; private set; } = Vector3.forward;
     public float ChargeAmount { get; private set; } = 0f;
+    
 
     [Header("Line Renderer")]
     public Transform lineStartTransform;
