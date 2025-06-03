@@ -30,7 +30,7 @@ public class PlayerScoreManager : MonoBehaviour
         if (playerScores[playerId] >= WinningScore)
         {
             Debug.Log($"?? P{playerId} 獲勝！");
-            // 可以在這裡觸發遊戲結束，暫時先不處理 UI 結束畫面
+            GameOverUIManager.Instance.ShowGameOver(playerScores, playerId);
         }
     }
 
