@@ -7,9 +7,13 @@ public class PizzaGoal : MonoBehaviour
         if (other.CompareTag("Pizza"))
         {
             Debug.Log(other.name + " 成功射入大披薩！");
-            // 這裡可以觸發得分、動畫或遊戲結束
 
+            PlayerController controller = other.GetComponent<PlayerController>();
+            if (controller != null)
+            {
+                int playerId = controller.playerId;
+                PlayerScoreManager.Instance.AddScore(playerId, 1);
+            }
         }
-
     }
 }
