@@ -1131,7 +1131,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &386535712
 Transform:
@@ -1167,8 +1167,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.8716793, y: 1, z: 1}
+  m_Center: {x: -0.9358367, y: 0, z: -0.0000000027368543}
 --- !u!23 &386535714
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1442,7 +1442,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &449298756
 Transform:
@@ -1478,8 +1478,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.1531863, y: 1, z: 1}
+  m_Center: {x: -0.57659495, y: 0, z: 0.0000000018350095}
 --- !u!23 &449298758
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2027,7 +2027,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &616727794
 Transform:
@@ -2063,8 +2063,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.7185428, y: 1, z: 1}
+  m_Center: {x: -1.3592712, y: 0, z: 4.279306e-12}
 --- !u!23 &616727796
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2132,7 +2132,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &714281059
 Transform:
@@ -2143,7 +2143,7 @@ Transform:
   m_GameObject: {fileID: 714281058}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.0019614352, z: -0, w: 0.9999981}
-  m_LocalPosition: {x: -6.07, y: -0.83744913, z: 0.99962777}
+  m_LocalPosition: {x: -5.84, y: -0.83744913, z: 1}
   m_LocalScale: {x: 0.6155, y: 1, z: 4.6931376}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2168,8 +2168,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.0598516, y: 1, z: 1}
+  m_Center: {x: -1.0299258, y: 0, z: 2.1855018e-11}
 --- !u!23 &714281061
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2303,7 +2303,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 732752619}
-  - component: {fileID: 732752618}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Wall
@@ -2311,28 +2310,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &732752618
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 732752617}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!4 &732752619
 Transform:
   m_ObjectHideFlags: 0
@@ -3055,7 +3032,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &996579464
 Transform:
@@ -3091,8 +3068,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.156272, y: 1, z: 1}
+  m_Center: {x: 0.5781357, y: 0, z: -1.8551312e-11}
 --- !u!23 &996579466
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3667,7 +3644,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1281443199
 Transform:
@@ -3703,8 +3680,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 4.0615373, y: 1, z: 1}
+  m_Center: {x: 1.5307702, y: 0, z: 0.0000000048098974}
 --- !u!23 &1281443201
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4491,7 +4468,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1436616686
 Transform:
@@ -4527,8 +4504,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.4411664, y: 1, z: 1}
+  m_Center: {x: 1.2205824, y: 0, z: -9.725491e-11}
 --- !u!23 &1436616688
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5006,11 +4983,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af70ce0567f5a842b2e7f5519457d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPower: 30
+  maxPower: 20
   minPower: 5
-  bounceForce: 0.7
+  bounceForce: 0.8
   boundaryLimit: 4
-  _bounceDelay: 0.1
+  rb: {fileID: 1759369690}
+  _bounceDelay: 0.3
+  _minVelocityLength: 10
+  _minReflectAngle: 25
 --- !u!114 &1759369689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5049,7 +5029,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 36
@@ -5144,7 +5124,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759369687}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 74b6051aa49e9514d942bc048f455206, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5409,7 +5389,7 @@ GameObject:
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1939465378
 Transform:
@@ -5445,8 +5425,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.5126588, y: 1, z: 1}
+  m_Center: {x: 0.75633, y: 0, z: 0.0000000037667047}
 --- !u!23 &1939465380
 MeshRenderer:
   m_ObjectHideFlags: 0

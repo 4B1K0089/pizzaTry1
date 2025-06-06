@@ -9,11 +9,21 @@ public class PizzaLauncher : MonoBehaviour
     public float bounceForce = 1.5f;
     public float boundaryLimit = 4f;
 
+    [SerializeField]
     private Rigidbody rb;
     private PlayerInput playerInput;
     private InputAction fireAction;
     private PlayerController controller;
 
+    [SerializeField]
+    private float _bounceDelay;
+
+    [SerializeField]
+    private float _minVelocityLength = 5;
+    private Vector3 _lastVelocity = Vector3.right;
+
+    [SerializeField]
+    private float _minReflectAngle = 40;
 
     private void Awake()
     {
@@ -54,7 +64,6 @@ public class PizzaLauncher : MonoBehaviour
 
     private IEnumerator Launch(Vector3 direction, float charge)
     {
-
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -71,27 +80,42 @@ public class PizzaLauncher : MonoBehaviour
         yield return null;
     }
 
+    private void FixedUpdate()
     {
+        RecordLastVelocity();
+    }
+
+    private void RecordLastVelocity()
+    {
+        if (rb.velocity.magnitude < _minVelocityLength)
+        {
+            if (rb.velocity.normalized == Vector3.zero) return;
+            _lastVelocity = rb.velocity.normalized * _minVelocityLength;
+        }
+        else
+        {
+            _lastVelocity = rb.velocity;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Vector3 normal = collision.contacts[0].normal;
-            rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
-            Debug.Log("撞牆！");
-        }
-
+        CollideWithWall(collision);
     }
-    private void OnCollisionStay (Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Vector3 normal = collision.contacts[0].normal;
-            rb.velocity = Vector3.Reflect(rb.velocity, normal) * bounceForce;
-            Debug.Log("撞牆！");
-        }
 
+    private void CollideWithWall(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("Wall")) return;
+        
+        Vector3 normal = collision.contacts[0].normal;
+        Debug.Log("撞牆！");
+        float angle = Vector3.Angle(_lastVelocity, normal);
+        Vector3 reflectVector = Vector3.Reflect(_lastVelocity, normal);
+        if (angle < _minReflectAngle)
+        {
+            reflectVector = Vector3.RotateTowards(normal * reflectVector.magnitude, reflectVector, (90 - _minReflectAngle) * Mathf.Deg2Rad, 0f);
+        }
+        rb.velocity = Vector3.zero;
+        rb.AddForce(reflectVector * bounceForce, ForceMode.Impulse);
     }
 }
