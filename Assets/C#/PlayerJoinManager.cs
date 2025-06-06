@@ -48,9 +48,10 @@ public class PlayerJoinManager : MonoBehaviour
         // 從列表中移除這個 index，避免重複使用
         availableModelIndices.RemoveAt(randomIndex);
 
-        // 移動玩家到出生點
-        playerInput.transform.position = spawnPoints[playerCount].position;
-        playerInput.transform.rotation = spawnPoints[playerCount].rotation;
+        // 移動玩家到出生點        
+        Rigidbody rigidbody = playerInput.GetComponent<Rigidbody>();
+        rigidbody.position = spawnPoints[playerCount].position;
+        rigidbody.rotation = spawnPoints[playerCount].rotation;        
 
         // 實例化模型，設為 player 的子物件
         GameObject model = Instantiate(pizzaModels[selectedModelIndex], playerInput.transform);
