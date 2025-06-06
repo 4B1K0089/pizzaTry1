@@ -71,16 +71,7 @@ public class PizzaLauncher : MonoBehaviour
         yield return null;
     }
 
-    private void Update()
     {
-        ClampPizzaPosition();
-    }
-
-    private void ClampPizzaPosition()
-    {
-        float x = Mathf.Clamp(transform.position.x, -boundaryLimit, boundaryLimit);
-        float z = Mathf.Clamp(transform.position.z, -boundaryLimit, boundaryLimit);
-        transform.position = new Vector3(x, transform.position.y, z);
     }
 
     private void OnCollisionEnter(Collision collision)
