@@ -34,13 +34,13 @@ public class MainMenu : MonoBehaviour
 
     void Navigate(Vector2 direction)
     {
-        if (direction.x > 0.1f) // 右移
-        {
-            currentSelection = Mathf.Min(currentSelection + 1, buttons.Length - 1);
-        }
-        else if (direction.x < -0.1f) // 左移
+        if (direction.y > 0.1f) // 向上 → 上一個選項
         {
             currentSelection = Mathf.Max(currentSelection - 1, 0);
+        }
+        else if (direction.y < -0.1f) // 向下 → 下一個選項
+        {
+            currentSelection = Mathf.Min(currentSelection + 1, buttons.Length - 1);
         }
 
         UpdateButtonHighlight();
