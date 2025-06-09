@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 public class PlayerJoinManager : MonoBehaviour
 {
+    [System.Serializable]
+    public class PlayerColorSetting
+    {
+        public int playerId;
+        public Color color;
+    }
+
+    public PlayerColorSetting[] playerColors; // 在 Inspector 中設定每個玩家的顏色
     public GameObject[] pizzaModels; // 只含有模型，不含 PlayerInput
     public Transform[] spawnPoints;
 
@@ -34,6 +42,7 @@ public class PlayerJoinManager : MonoBehaviour
     private void OnPlayerJoined(PlayerInput playerInput)
     {
         Debug.Log($"加入的玩家裝置: {playerInput.devices[0].displayName}");
+
         if (availableModelIndices.Count == 0 || playerCount >= spawnPoints.Length)
         {
             Debug.LogWarning("已無可用模型或出生點！");
@@ -41,30 +50,49 @@ public class PlayerJoinManager : MonoBehaviour
             return;
         }
 
-        // 從剩餘的 index 中隨機選一個
         int randomIndex = Random.Range(0, availableModelIndices.Count);
         int selectedModelIndex = availableModelIndices[randomIndex];
-
-        // 從列表中移除這個 index，避免重複使用
         availableModelIndices.RemoveAt(randomIndex);
 
-        // 移動玩家到出生點        
         Rigidbody rigidbody = playerInput.GetComponent<Rigidbody>();
         rigidbody.position = spawnPoints[playerCount].position;
-        rigidbody.rotation = spawnPoints[playerCount].rotation;        
+        rigidbody.rotation = spawnPoints[playerCount].rotation;
 
-        // 實例化模型，設為 player 的子物件
         GameObject model = Instantiate(pizzaModels[selectedModelIndex], playerInput.transform);
         model.transform.localPosition = Vector3.zero;
-        model.SetActive(true); // 加這行來保證模型有顯示
+        model.SetActive(true);
 
-        // 指定 playerId（1P, 2P...）
         PlayerController controller = playerInput.GetComponent<PlayerController>();
         if (controller != null)
         {
-            controller.playerId = playerCount + 1; // 第 0 位是 P1（+1）
-            Debug.Log($"設定玩家編號為 P{controller.playerId}");
+            controller.playerId = playerCount + 1;
+
+            // 從設定陣列中找對應顏色
+            Color colorToUse = Color.white;
+            foreach (var setting in playerColors)
+            {
+                if (setting.playerId == controller.playerId)
+                {
+                    colorToUse = setting.color;
+                    break;
+                }
+            }
+
+            // 將顏色存給 controller，讓它可以用
+            controller.lineColor = colorToUse;
+
+            // 如果有 LineRenderer，當場設定顏色
+            if (controller.lineRenderer != null)
+            {
+                controller.lineRenderer.startColor = colorToUse;
+                controller.lineRenderer.endColor = colorToUse;
+            }
+
+            Debug.Log($"設定 P{controller.playerId} 顏色為 {colorToUse}");
         }
+
+
         playerCount++;
     }
+
 }

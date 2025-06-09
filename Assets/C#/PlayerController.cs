@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     public LineRenderer lineRenderer;
     public float maxLineLength = 2f;
 
+    [Header("Line Renderer Settings")]
+    public Color lineColor = Color.white;
+
     private Vector2 moveInput;
     private Gamepad assignedGamepad;
     public bool IsCharging { get; private set; } = false;
@@ -32,6 +35,10 @@ public class PlayerController : MonoBehaviour
         {
             lineRenderer.positionCount = 2;
             lineRenderer.enabled = false;
+
+            // 設定顏色
+            lineRenderer.startColor = lineColor;
+            lineRenderer.endColor = lineColor;
         }
     }
 
