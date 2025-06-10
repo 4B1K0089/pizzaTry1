@@ -14,6 +14,9 @@ public class PlayerJoinManager : MonoBehaviour
     public PlayerColorSetting[] playerColors; // 在 Inspector 中設定每個玩家的顏色
     public GameObject[] pizzaModels; // 只含有模型，不含 PlayerInput
     public Transform[] spawnPoints;
+    public GameObject[] uiPrefabs; // 拖入 PlayerName1 ~ 4 預製體
+    public Transform canvasParent; // 指向 WorldCanvas（UI 要生成在哪）
+
 
     private List<int> availableModelIndices = new List<int>();
     private int playerCount = 0;
@@ -91,6 +94,22 @@ public class PlayerJoinManager : MonoBehaviour
             Debug.Log($"設定 P{controller.playerId} 顏色為 {colorToUse}");
         }
 
+        // 加上跟隨 UI
+        if (uiPrefabs != null && playerCount < uiPrefabs.Length)
+        {
+            GameObject uiInstance = Instantiate(uiPrefabs[playerCount], canvasParent);
+            uiInstance.SetActive(true);
+            // UI 加在世界 Canvas 底下
+            PizzaUIFollow follow = uiInstance.GetComponent<PizzaUIFollow>();
+
+            if (follow != null)
+            {
+                follow.target = playerInput.transform;           // 跟隨玩家本體
+                follow.cam = Camera.main.transform;              // 看鏡頭方向
+                follow.worldOffset = new Vector3(0, 2f, 0);      // 顯示在玩家上方
+            }
+
+        }
 
         playerCount++;
     }
