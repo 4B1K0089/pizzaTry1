@@ -100,15 +100,32 @@ public class PizzaLauncher : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        CollideWithWall(collision);
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            CollideWithWall(collision);
+        }
+        else if (collision.gameObject.CompareTag("Pizza"))
+        {
+            CollideWithPizza(collision);
+        }
     }
 
     private void CollideWithWall(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Wall")) return;
-        
         Vector3 normal = collision.contacts[0].normal;
         Debug.Log("撞牆！");
+        ReflectAndBounce(normal);
+    }
+
+    private void CollideWithPizza(Collision collision)
+    {
+        Vector3 normal = collision.contacts[0].normal;
+        Debug.Log("撞披薩！");
+        ReflectAndBounce(normal);
+    }
+
+    private void ReflectAndBounce(Vector3 normal)
+    {
         float angle = Vector3.Angle(_lastVelocity, normal);
         Vector3 reflectVector = Vector3.Reflect(_lastVelocity, normal);
         if (angle < _minReflectAngle)
@@ -118,4 +135,5 @@ public class PizzaLauncher : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.AddForce(reflectVector * bounceForce, ForceMode.Impulse);
     }
+
 }
