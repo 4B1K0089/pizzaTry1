@@ -9,7 +9,7 @@ public class GameOverUIManager : MonoBehaviour
     public static GameOverUIManager Instance;
 
     public GameObject gameOverPanel;
-    //public TMP_Text resultsText;
+    public TMP_Text resultsText;
     public Image[] winImages; // [0] = P1³Ó§Q¹Ï, [1] = P2, etc.
 
     private bool inputEnabled = false;

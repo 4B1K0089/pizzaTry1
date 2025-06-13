@@ -46,16 +46,14 @@ public class PlayerJoinManager : MonoBehaviour
     {
         Debug.Log($"加入的玩家裝置: {playerInput.devices[0].displayName}");
 
-        if (availableModelIndices.Count == 0 || playerCount >= spawnPoints.Length)
+        if (playerCount >= pizzaModels.Length || playerCount >= spawnPoints.Length)
         {
             Debug.LogWarning("已無可用模型或出生點！");
             Destroy(playerInput.gameObject);
             return;
         }
 
-        int randomIndex = Random.Range(0, availableModelIndices.Count);
-        int selectedModelIndex = availableModelIndices[randomIndex];
-        availableModelIndices.RemoveAt(randomIndex);
+        int selectedModelIndex = playerCount; // 直接根據加入順序取模型
 
         Rigidbody rigidbody = playerInput.GetComponent<Rigidbody>();
         rigidbody.position = spawnPoints[playerCount].position;
@@ -70,7 +68,7 @@ public class PlayerJoinManager : MonoBehaviour
         {
             controller.playerId = playerCount + 1;
 
-            // 從設定陣列中找對應顏色
+            // 設定顏色
             Color colorToUse = Color.white;
             foreach (var setting in playerColors)
             {
@@ -81,10 +79,8 @@ public class PlayerJoinManager : MonoBehaviour
                 }
             }
 
-            // 將顏色存給 controller，讓它可以用
             controller.lineColor = colorToUse;
 
-            // 如果有 LineRenderer，當場設定顏色
             if (controller.lineRenderer != null)
             {
                 controller.lineRenderer.startColor = colorToUse;
@@ -94,24 +90,22 @@ public class PlayerJoinManager : MonoBehaviour
             Debug.Log($"設定 P{controller.playerId} 顏色為 {colorToUse}");
         }
 
-        // 加上跟隨 UI
         if (uiPrefabs != null && playerCount < uiPrefabs.Length)
         {
             GameObject uiInstance = Instantiate(uiPrefabs[playerCount], canvasParent);
             uiInstance.SetActive(true);
-            // UI 加在世界 Canvas 底下
-            PizzaUIFollow follow = uiInstance.GetComponent<PizzaUIFollow>();
 
+            PizzaUIFollow follow = uiInstance.GetComponent<PizzaUIFollow>();
             if (follow != null)
             {
-                follow.target = playerInput.transform;           // 跟隨玩家本體
-                follow.cam = Camera.main.transform;              // 看鏡頭方向
-                follow.worldOffset = new Vector3(0, 2f, 0);      // 顯示在玩家上方
+                follow.target = playerInput.transform;
+                follow.cam = Camera.main.transform;
+                follow.worldOffset = new Vector3(0, 2f, 0);
             }
-
         }
 
         playerCount++;
     }
+
 
 }
