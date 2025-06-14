@@ -33,13 +33,13 @@ public class GameOverUIManager : MonoBehaviour
         List<KeyValuePair<int, int>> sorted = new List<KeyValuePair<int, int>>(playerScores);
         sorted.Sort((a, b) => b.Value.CompareTo(a.Value)); // 降序排序
 
-        string result = "分數結果：\n";
+        string result = "Score\n";
         foreach (var entry in sorted)
         {
-            result += $"P{entry.Key}: {entry.Value} 分\n";
+            result += $"{entry.Key}P: {entry.Value} \n";
         }
 
-        //resultsText.text = result;
+        resultsText.text = result;
     }
 
     void ShowWinImage(int winnerId)
