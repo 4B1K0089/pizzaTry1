@@ -9,6 +9,10 @@ public class PlayerScoreManager : MonoBehaviour
 
     public int WinningScore = 3;
 
+    [Header("Audio")]
+    public AudioClip scoreClip; // 拖進得分音效
+    public AudioSource audioSource; // 拖進一個 AudioSource（建議同一個物件上）
+
     private void Awake()
     {
         if (Instance == null)
@@ -24,6 +28,12 @@ public class PlayerScoreManager : MonoBehaviour
 
         playerScores[playerId] += amount;
         Debug.Log($"P{playerId} 得到 1 分，現在是 {playerScores[playerId]} 分");
+
+        // ? 播放得分音效
+        if (scoreClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(scoreClip);
+        }
 
         UIManager.Instance.UpdateScore(playerId, playerScores[playerId]);
 

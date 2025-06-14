@@ -9,21 +9,22 @@ public class PizzaLauncher : MonoBehaviour
     public float bounceForce = 1.5f;
     public float boundaryLimit = 4f;
 
-    [SerializeField]
-    private Rigidbody rb;
+    [SerializeField] private Rigidbody rb;
     private PlayerInput playerInput;
     private InputAction fireAction;
     private PlayerController controller;
 
-    [SerializeField]
-    private float _bounceDelay;
-
-    [SerializeField]
-    private float _minVelocityLength = 5;
+    [SerializeField] private float _bounceDelay;
+    [SerializeField] private float _minVelocityLength = 5;
     private Vector3 _lastVelocity = Vector3.right;
+    [SerializeField] private float _minReflectAngle = 40;
 
-    [SerializeField]
-    private float _minReflectAngle = 40;
+    // 🎵 加入音效欄位
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip shootClip;
+    public AudioClip wallHitClip;
+    public AudioClip pizzaHitClip;
 
     private void Awake()
     {
@@ -68,13 +69,16 @@ public class PizzaLauncher : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        // 新的力道與Drag設定
-        float power = Mathf.Lerp(minPower, maxPower, charge); // 根據LineRenderer長度變化
+        float power = Mathf.Lerp(minPower, maxPower, charge);
         rb.AddForce(direction * power, ForceMode.Impulse);
 
         float maxDrag = 5f;
         float minDrag = 0.2f;
-        rb.drag = Mathf.Lerp(maxDrag, minDrag, charge); // 長度越長，drag越小
+        rb.drag = Mathf.Lerp(maxDrag, minDrag, charge);
+
+        // ✅ 播放發射音效
+        if (audioSource && shootClip)
+            audioSource.PlayOneShot(shootClip);
 
         Debug.Log($"發射！方向: {direction}, 力度: {power}, Drag: {rb.drag}");
         yield return null;
@@ -115,6 +119,10 @@ public class PizzaLauncher : MonoBehaviour
         Vector3 normal = collision.contacts[0].normal;
         Debug.Log("撞牆！");
         ReflectAndBounce(normal);
+
+        // ✅ 播放撞牆音效
+        if (audioSource && wallHitClip)
+            audioSource.PlayOneShot(wallHitClip);
     }
 
     private void CollideWithPizza(Collision collision)
@@ -122,6 +130,10 @@ public class PizzaLauncher : MonoBehaviour
         Vector3 normal = collision.contacts[0].normal;
         Debug.Log("撞披薩！");
         ReflectAndBounce(normal);
+
+        // ✅ 播放披薩互撞音效
+        if (audioSource && pizzaHitClip)
+            audioSource.PlayOneShot(pizzaHitClip);
     }
 
     private void ReflectAndBounce(Vector3 normal)
@@ -135,5 +147,4 @@ public class PizzaLauncher : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.AddForce(reflectVector * bounceForce, ForceMode.Impulse);
     }
-
 }

@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
     public int playerId; // 設定為 1, 2, 3, 4...
     public Vector3 LaunchDirection { get; private set; } = Vector3.forward;
     public float ChargeAmount { get; private set; } = 0f;
-    
 
     [Header("Line Renderer")]
     public Transform lineStartTransform;
@@ -16,9 +15,15 @@ public class PlayerController : MonoBehaviour
     [Header("Line Renderer Settings")]
     public Color lineColor = Color.white;
 
+    [Header("Audio")]
+    public AudioSource audioSource;       // 指定 AudioSource（可共用）
+    public AudioClip aimClip;             // 瞄準音效
+
     private Vector2 moveInput;
     private Gamepad assignedGamepad;
     public bool IsCharging { get; private set; } = false;
+
+    private bool wasChargingLastFrame = false; // 用來偵測瞄準開始的變數
 
     private void Awake()
     {
@@ -36,7 +41,6 @@ public class PlayerController : MonoBehaviour
             lineRenderer.positionCount = 2;
             lineRenderer.enabled = false;
 
-            // 設定顏色
             lineRenderer.startColor = lineColor;
             lineRenderer.endColor = lineColor;
         }
@@ -52,10 +56,16 @@ public class PlayerController : MonoBehaviour
         {
             IsCharging = true;
 
-            Vector3 inputDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-            LaunchDirection = -inputDir; // 指向反方向（如彈射）
+            // 當從沒按變成有按 → 播放瞄準音效
+            if (!wasChargingLastFrame)
+            {
+                PlaySound(aimClip);
+            }
 
-            ChargeAmount = Mathf.Clamp01(moveInput.magnitude); // 限制 0~1
+            Vector3 inputDir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+            LaunchDirection = -inputDir;
+
+            ChargeAmount = Mathf.Clamp01(moveInput.magnitude);
 
             transform.forward = LaunchDirection;
 
@@ -76,7 +86,10 @@ public class PlayerController : MonoBehaviour
 
             IsCharging = false;
         }
+
+        wasChargingLastFrame = IsCharging;
     }
+
     public float GetLineLength()
     {
         if (lineRenderer != null && lineRenderer.positionCount >= 2)
@@ -85,9 +98,17 @@ public class PlayerController : MonoBehaviour
         }
         return 0f;
     }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
     }
 
+    private void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
 }

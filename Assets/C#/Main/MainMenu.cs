@@ -15,6 +15,13 @@ public class MainMenu : MonoBehaviour
     public Color highlightColor = Color.green; // ✅ 可在 Unity 修改
     public Color normalColor = Color.white;    // 普通按鈕顏色
 
+    [Header("Audio Settings")]
+    public AudioSource bgmSource;
+    public AudioSource sfxSource;
+    public AudioClip navigateClip; // 切換選項音效
+    public AudioClip confirmClip;  // 確認選擇音效
+
+
     void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -30,17 +37,27 @@ public class MainMenu : MonoBehaviour
 
         startButton.onClick.AddListener(StartGame);
         quitButton.onClick.AddListener(QuitGame);
+
+        // 撥放背景音樂（只在開始介面）
+        if (bgmSource != null && !bgmSource.isPlaying)
+        {
+            bgmSource.loop = true;
+            bgmSource.Play();
+        }
     }
 
     void Navigate(Vector2 direction)
     {
-        if (direction.y > 0.1f) // 向上 → 上一個選項
-        {
+        int previousSelection = currentSelection;
+
+        if (direction.y > 0.1f)
             currentSelection = Mathf.Max(currentSelection - 1, 0);
-        }
-        else if (direction.y < -0.1f) // 向下 → 下一個選項
-        {
+        else if (direction.y < -0.1f)
             currentSelection = Mathf.Min(currentSelection + 1, buttons.Length - 1);
+
+        if (previousSelection != currentSelection && sfxSource != null && navigateClip != null)
+        {
+            sfxSource.PlayOneShot(navigateClip);
         }
 
         UpdateButtonHighlight();
@@ -53,6 +70,11 @@ public class MainMenu : MonoBehaviour
 
     void SelectButton()
     {
+        if (sfxSource != null && confirmClip != null)
+        {
+            sfxSource.PlayOneShot(confirmClip);
+        }
+
         buttons[currentSelection].onClick.Invoke();
     }
 

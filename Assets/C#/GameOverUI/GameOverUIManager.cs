@@ -6,7 +6,16 @@ using UnityEngine.UI;
 
 public class GameOverUIManager : MonoBehaviour
 {
+
     public static GameOverUIManager Instance;
+
+    [Header("音效設定")]
+    public AudioSource gameBGMSource;     // 遊戲中播放的背景音樂（會暫停）
+    public AudioSource bgmSource;         // 結算用 AudioSource
+    public AudioClip resultIntroSFX;      // 開場提示音效
+    public AudioClip resultLoopBGM;       // 結算背景音樂
+
+
 
     public GameObject gameOverPanel;
     public TMP_Text resultsText;
@@ -26,7 +35,31 @@ public class GameOverUIManager : MonoBehaviour
         ShowSortedScores(playerScores);
         ShowWinImage(winnerId);
         inputEnabled = true;
+
+
+        // ? 暫停遊戲背景音樂
+        if (gameBGMSource != null && gameBGMSource.isPlaying)
+            gameBGMSource.Pause();
+
+        // ? 播放開場提示音效
+        if (resultIntroSFX != null && bgmSource != null)
+            bgmSource.PlayOneShot(resultIntroSFX);
+
+        // ? 延遲播放結算背景音樂
+        if (resultLoopBGM != null && bgmSource != null)
+            StartCoroutine(PlayResultBGMWithDelay(resultIntroSFX.length));
     }
+
+    private System.Collections.IEnumerator PlayResultBGMWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        bgmSource.clip = resultLoopBGM;
+        bgmSource.loop = true;
+        bgmSource.Play();
+    }
+
+
 
     void ShowSortedScores(Dictionary<int, int> playerScores)
     {
