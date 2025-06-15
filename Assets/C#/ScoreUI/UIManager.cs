@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
     {
         if (playerId >= 1 && playerId <= scoreTexts.Length)
         {
-            scoreTexts[playerId - 1].text = $"{playerId}P: {score}";
+            scoreTexts[playerId - 1].text = $"{playerId}P ---------- {score}";
         }
     }
 }

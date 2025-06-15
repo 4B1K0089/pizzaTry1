@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PizzaUIFollow : MonoBehaviour
 {
-    public Transform target;       // 要跟隨的披薩角色
-    public Transform cam;          // 攝影機 transform
-    public Vector3 worldOffset;    // 距離披薩的偏移（例如：Vector3.up * 2）
+    public Transform target; // 玩家物件
+    public Camera cam;       // 主攝影機
+    public Vector3 worldOffset = new Vector3(0, 2, 0); // UI 離頭部多高
+
 
     private RectTransform rectTransform;
 
@@ -17,11 +19,17 @@ public class PizzaUIFollow : MonoBehaviour
     {
         if (target == null || cam == null) return;
 
-        // 世界座標 + offset → 螢幕座標
         Vector3 worldPos = target.position + worldOffset;
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
 
-        // 設定 UI 在螢幕上的位置
-        rectTransform.position = screenPos;
+        Vector2 anchoredPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform.parent as RectTransform,
+            screenPos,
+            cam,
+            out anchoredPos
+        );
+
+        rectTransform.anchoredPosition = anchoredPos;
     }
 }

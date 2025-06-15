@@ -99,7 +99,7 @@ public class PlayerJoinManager : MonoBehaviour
             if (follow != null)
             {
                 follow.target = playerInput.transform;
-                follow.cam = Camera.main.transform;
+                follow.cam = Camera.main;
                 follow.worldOffset = new Vector3(0, 2f, 0);
             }
         }
