@@ -1,12 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PizzaUIFollow : MonoBehaviour
 {
-    public Transform target; // 玩家物件
-    public Camera cam;       // 主攝影機
-    public Vector3 worldOffset = new Vector3(0, 2, 0); // UI 離頭部多高
-
+    public Transform target;
+    public Camera cam;
+    public Vector3 worldOffset;
 
     private RectTransform rectTransform;
 
@@ -17,19 +15,21 @@ public class PizzaUIFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        if (target == null || cam == null) return;
+        if (target == null || cam == null || rectTransform == null) return;
 
         Vector3 worldPos = target.position + worldOffset;
-        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+        Vector3 screenPos = cam.GetComponent<Camera>().WorldToScreenPoint(worldPos);
 
         Vector2 anchoredPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            rectTransform.parent as RectTransform,
-            screenPos,
-            cam,
-            out anchoredPos
-        );
+        RectTransform parentRect = rectTransform.parent as RectTransform;
 
-        rectTransform.anchoredPosition = anchoredPos;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            parentRect, screenPos, cam.GetComponent<Camera>(), out anchoredPos))
+        {
+            rectTransform.anchoredPosition = anchoredPos;
+        }
+        Debug.Log($"Follow Pos: {target.position}, UI Screen Pos: {screenPos}");
+
     }
+
 }

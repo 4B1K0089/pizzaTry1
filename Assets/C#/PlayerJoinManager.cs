@@ -92,13 +92,26 @@ public class PlayerJoinManager : MonoBehaviour
 
         if (uiPrefabs != null && playerCount < uiPrefabs.Length)
         {
+            // 開啟 WorldCanvas（確保顯示）
+            //canvasParent.gameObject.SetActive(true);
+
             GameObject uiInstance = Instantiate(uiPrefabs[playerCount], canvasParent);
             uiInstance.SetActive(true);
 
             PizzaUIFollow follow = uiInstance.GetComponent<PizzaUIFollow>();
             if (follow != null)
             {
-                follow.target = playerInput.transform;
+                Transform headAnchor = playerInput.transform.Find("HeadAnchor"); // ? 先宣告
+                if (headAnchor != null)
+                {
+                    follow.target = headAnchor; // ? 如果找到 HeadAnchor 就跟著它
+                }
+                else
+                {
+                    follow.target = playerInput.transform; // ?找不到就退而求其次跟著主體
+                    Debug.LogWarning("找不到 HeadAnchor，使用 playerInput.transform 代替");
+                }
+
                 follow.cam = Camera.main;
                 follow.worldOffset = new Vector3(0, 2f, 0);
             }
