@@ -28,11 +28,17 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         var playerInput = GetComponent<PlayerInput>();
-        if (playerInput.devices.Count > 0 && playerInput.devices[0] is Gamepad pad)
+
+        foreach (var device in playerInput.devices)
         {
-            assignedGamepad = pad;
+            if (device is Gamepad pad && pad.added)
+            {
+                assignedGamepad = pad;
+                break;
+            }
         }
     }
+
 
     private void Start()
     {
@@ -48,9 +54,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (assignedGamepad == null) return;
+        if (assignedGamepad != null && assignedGamepad.added)
+        {
+            moveInput = assignedGamepad.leftStick.ReadValue();
+        }
 
-        moveInput = assignedGamepad.leftStick.ReadValue();
 
         if (moveInput.magnitude > 0.1f)
         {

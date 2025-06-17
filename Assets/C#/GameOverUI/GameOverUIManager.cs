@@ -27,6 +27,9 @@ public class GameOverUIManager : MonoBehaviour
     public Button quitButton;
     private Button[] buttons;
     private int currentIndex = 0;
+    private Coroutine hintBlinkCoroutine;
+    public TMP_Text holdHintText;
+
 
     private float holdTime = 0f;
     public float requiredHoldDuration = 1.5f; // ªø«ö 1.5 ¬í
@@ -77,6 +80,14 @@ public class GameOverUIManager : MonoBehaviour
         restartButton.onClick.AddListener(RestartGame);
         quitButton.onClick.AddListener(QuitGame);
         UpdateButtonHighlight();
+
+        if (holdHintText != null)
+        {
+            holdHintText.gameObject.SetActive(true);
+            hintBlinkCoroutine = StartCoroutine(BlinkHintText());
+        }
+
+
 
         if (gameBGMSource != null && gameBGMSource.isPlaying)
             gameBGMSource.Pause();
@@ -183,6 +194,9 @@ public class GameOverUIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (hintBlinkCoroutine != null)
+            StopCoroutine(hintBlinkCoroutine);
+
     }
 
     public void QuitGame()
@@ -190,7 +204,23 @@ public class GameOverUIManager : MonoBehaviour
         Application.Quit();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+        if (hintBlinkCoroutine != null)
+            StopCoroutine(hintBlinkCoroutine);
+
 #endif
     }
+
+    IEnumerator BlinkHintText()
+    {
+        while (true)
+        {
+            holdHintText.enabled = true;
+            yield return new WaitForSecondsRealtime(0.5f);
+
+            holdHintText.enabled = false;
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
+    }
+
 
 }
