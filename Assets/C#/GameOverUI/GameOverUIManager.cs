@@ -28,6 +28,11 @@ public class GameOverUIManager : MonoBehaviour
     private Button[] buttons;
     private int currentIndex = 0;
 
+    private float holdTime = 0f;
+    public float requiredHoldDuration = 1.5f; // 長按 1.5 秒
+    private bool isHolding = false;
+
+
     [Header("按鈕顏色")]
     public Color highlightColor = Color.yellow;
     public Color normalColor = Color.white;
@@ -41,9 +46,14 @@ public class GameOverUIManager : MonoBehaviour
         else Destroy(gameObject);
 
         inputActions = new PlayerInputActions();
+
+        // 加上這行讓上下選擇有效
         inputActions.StartUI.Navigate.performed += ctx => Navigate(ctx.ReadValue<Vector2>());
-        inputActions.StartUI.Submit.performed += ctx => SelectButton();
+
+        inputActions.StartUI.Submit.started += ctx => StartHold();
+        inputActions.StartUI.Submit.canceled += ctx => CancelHold();
     }
+
 
     private void OnEnable()
     {
@@ -58,6 +68,7 @@ public class GameOverUIManager : MonoBehaviour
     public void ShowGameOver(Dictionary<int, int> playerScores, int winnerId)
     {
         gameOverPanel.SetActive(true);
+        Time.timeScale = 0f;
         ShowSortedScores(playerScores);
         ShowWinImage(winnerId);
         inputEnabled = true;
@@ -130,6 +141,34 @@ public class GameOverUIManager : MonoBehaviour
         buttons[currentIndex].onClick.Invoke();
     }
 
+    void StartHold()
+    {
+        if (!inputEnabled) return;
+        isHolding = true;
+        holdTime = 0f;
+        StartCoroutine(HoldSubmitCoroutine());
+    }
+
+    void CancelHold()
+    {
+        isHolding = false;
+    }
+
+    IEnumerator HoldSubmitCoroutine()
+    {
+        while (isHolding)
+        {
+            holdTime += Time.unscaledDeltaTime;
+            if (holdTime >= requiredHoldDuration)
+            {
+                SelectButton();
+                isHolding = false;
+            }
+            yield return null;
+        }
+    }
+
+
     void UpdateButtonHighlight()
     {
         for (int i = 0; i < buttons.Length; i++)
@@ -142,7 +181,8 @@ public class GameOverUIManager : MonoBehaviour
 
     public void RestartGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void QuitGame()

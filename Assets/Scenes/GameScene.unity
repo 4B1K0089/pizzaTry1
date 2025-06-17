@@ -3566,6 +3566,53 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 604163359}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &606036670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 606036672}
+  - component: {fileID: 606036671}
+  m_Layer: 0
+  m_Name: ShrinkPowerUpManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &606036671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606036670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74768166c8defa04eafbbfa1dfc29cc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerUpPrefab: {fileID: 1255969352}
+  minBounds: {x: -4, y: 0.5, z: -4}
+  maxBounds: {x: 4, y: 0.5, z: 4}
+--- !u!4 &606036672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606036670}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.8797722, y: 4.457484, z: 2.121938}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &606536115
 GameObject:
   m_ObjectHideFlags: 0
@@ -5185,12 +5232,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9bdcd3c7366c506408a146ea09144225,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.51
+      value: 0.16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9bdcd3c7366c506408a146ea09144225,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.115779
+      value: -2.95
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9bdcd3c7366c506408a146ea09144225,
         type: 3}
@@ -5240,17 +5287,30 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9bdcd3c7366c506408a146ea09144225,
         type: 3}
       propertyPath: m_Name
-      value: "\u8611\u83C7_\u5857\u8272\u5B8C\u6210"
+      value: ShrinkPowerUp
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9bdcd3c7366c506408a146ea09144225,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9bdcd3c7366c506408a146ea09144225,
+        type: 3}
+      propertyPath: m_TagString
+      value: PowerUp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9bdcd3c7366c506408a146ea09144225,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1255969357}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9bdcd3c7366c506408a146ea09144225,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1255969356}
   m_SourcePrefab: {fileID: 100100000, guid: 9bdcd3c7366c506408a146ea09144225, type: 3}
 --- !u!1001 &1081314737
 PrefabInstance:
@@ -5846,6 +5906,7 @@ MonoBehaviour:
   - {fileID: 119969439}
   restartButton: {fileID: 1756438167}
   quitButton: {fileID: 479078098}
+  requiredHoldDuration: 1.5
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1250944543
@@ -5902,6 +5963,47 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1255969352 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9bdcd3c7366c506408a146ea09144225,
+    type: 3}
+  m_PrefabInstance: {fileID: 1070918140}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1255969356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255969352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823b64f6819195440ad7c6b5454b86ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shrinkDuration: 5
+  shrinkScale: 0.5
+--- !u!135 &1255969357
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255969352}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.06375967
+  m_Center: {x: 0, y: 0, z: 0.046988737}
 --- !u!1 &1264484638
 GameObject:
   m_ObjectHideFlags: 0
@@ -6319,7 +6421,7 @@ GameObject:
   - component: {fileID: 1368546363}
   m_Layer: 0
   m_Name: BigPizza
-  m_TagString: Pizza
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6576,8 +6678,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369614950}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.3457944, y: 2.4156528, z: 3.4363427}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -16.795794, y: 2.2156527, z: 3.4363427}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6585,7 +6687,7 @@ Transform:
   - {fileID: 1542374867}
   - {fileID: 1762028972}
   - {fileID: 1090774634}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1759369694}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1383574506
 GameObject:
@@ -7867,6 +7969,7 @@ GameObject:
   - component: {fileID: 1759369690}
   - component: {fileID: 1759369689}
   - component: {fileID: 1759369688}
+  - component: {fileID: 1759369698}
   - component: {fileID: 1759369697}
   m_Layer: 0
   m_Name: PlayerPizza
@@ -8027,6 +8130,7 @@ Transform:
   m_Children:
   - {fileID: 795842625}
   - {fileID: 858362378}
+  - {fileID: 1369614951}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1759369696
@@ -8148,6 +8252,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1759369698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759369687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d14913ed5a0d6d4cac3944fa356c650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1762028971
 GameObject:
   m_ObjectHideFlags: 0
@@ -9148,8 +9264,8 @@ SceneRoots:
   - {fileID: 1809242526}
   - {fileID: 769434073}
   - {fileID: 368332727}
-  - {fileID: 1369614951}
   - {fileID: 1234451239}
   - {fileID: 566038293}
   - {fileID: 726688230}
   - {fileID: 1070918140}
+  - {fileID: 606036672}
